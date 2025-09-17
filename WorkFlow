@@ -1,0 +1,51 @@
+Problem Statement
+  Our goal is to build the complete prediction application. This involves two main parts:
+
+model.py: A script that prepares the data to match a pre-defined structure, trains a model, and saves it.
+main.py: A web server that loads the saved model and provides a web page for users to get price predictions.
+File Structure:
+
+project/
+├── model.py           <-- YOU WILL WRITE THIS
+├── main.py            <-- YOU WILL WRITE THIS
+├── cleaned_bengaluru_house_data.csv  <-- PROVIDED TO YOU
+├── columns.json       <-- PROVIDED TO YOU
+├── templates/
+│   └── index.html     <-- PROVIDED TO YOU
+└── bangalore_house_price_model.pickle (This will be your output)
+Step 1: Environment Setup
+    1 Create the virtual environment:
+        python -m venv env
+    2 Activate the environment:
+        source env/bin/activate
+  3 Install required packages:
+        pip install --no-cache-dir flask pandas scikit-learn
+
+Step 2: Project Building
+  Your Tasks for model.py (The Model)
+  Your goal is to prepare data to match the provided columns.json, train a model, and save it.
+
+  1 Load Data: Load the cleaned_bengaluru_house_data.csv file.
+  2 Data Transformation & Outlier Removal:
+      IMPORTANT: Your first step should be to prepare the location column. Any location in your data that is not present in the provided columns.json file must be renamed to 'other'. This ensures your data perfectly aligns with the required format.
+      Perform one-hot encoding on the location column to convert it into a numeric format. pandas.get_dummies() is perfect for this.
+      For better model performance, remove some business outliers:
+      Create a temporary price_per_sqft column to help.
+      Remove apartments where the square feet per bedroom is less than 300.
+  3 Train the Model:
+      Define your features (X) and your target (y, which is the price column).
+      Split your data into training and testing sets.
+      Train a LinearRegression model.
+  4 Save the Model:
+      Save the trained model to a file named bangalore_house_price_model.pickle.
+      You do not need to create columns.json, as it is already provided.
+
+Tasks for main.py (The Web Server)
+Our goal is to load the saved model and create the web interface.
+
+    1 Create a Flask App: Set up a basic Flask web server.
+    2 Load Artifacts: Write a function that loads the bangalore_house_price_model.pickle and the provided columns.json file into global variables when the server starts.
+    3 Create Prediction Logic: Write a function that takes user inputs (location, sqft, bhk, bath) and uses the loaded model and column data to return a price prediction.
+    4 Define Routes (API Endpoints):
+        / (Home Route): This route should render the index.html page. You'll need to pass the list of locations (which you get from columns.json) to the template so it can create the dropdown menu.
+        /predict (Prediction Route): This route will handle the form submission. It will call your prediction logic and display the result back on the main page.
